@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subida de Fotos</title>
+ <style>
+    body {
+        font-family: Arial;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+    }
+    h2 {
+        color: #6c2eb9;
+        font-size: 6vw;
+        text-align: center;
+    }
+    label, p {
+        display: block;
+        margin-top: 10px;
+        font-size: 4vw;
+    }
+    input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 4vw;
+    }
+    button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background: #6c2eb9;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-top: 20px;
+        font-size: 5vw;
+        border-radius: 5px;
+    }
+    #resultado {
+        font-size: 4vw;
+        color: green;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+</head>
+<body>
+
+  <h2>Cargar fotos de campaña</h2>
+  <p><strong>Mall:</strong> <span id="mall"></span></p>
+  <p><strong>Campaña:</strong> <span id="campaña"></span></p>
+
+  <form id="formularioFotos">
+    <label>Selecciona fotos:
+      <input type="file" id="inputFotos" name="fotos" accept="image/*" multiple required>
+    </label>
+    <button type="submit">Subir fotos</button>
+  </form>
+
+  <p id="resultado" style="margin-top: 20px;"></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const campaña = params.get("Nombre_campaña");
+    const mall = params.get("var_mall");
+    const pedidoID = params.get("ID_Pedido");
+    const campañaID = params.get("ID_CampañaCargada");
+    const pedidoMallID = params.get("ID_PedidoMallCampaña");
+    const registroExcelID = params.get("ID_RegistroExcel");
+    const año = params.get("var_año");
+    const cliente = params.get("var_cliente");
+    const correo = params.get("correo");
+
+    // Mostrar solo mall y campaña
+    document.getElementById("mall").innerText = mall;
+    document.getElementById("campaña").innerText = campaña;
+
+    const form = document.getElementById("formularioFotos");
+    const resultado = document.getElementById("resultado");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const files = document.getElementById("inputFotos").files;
+
+      if (files.length === 0) {
+        resultado.innerText = "Por favor selecciona al menos una foto.";
+        return;
+      }
+
+      resultado.innerText = "Subiendo fotos...";
+
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append("archivo", files[i]);
+
+        // Enviar todas las variables
+        formData.append("Nombre_campaña", campaña);
+        formData.append("var_mall", mall);
+        formData.append("ID_Pedido", pedidoID);
+        formData.append("ID_CampañaCargada", campañaID);
+        formData.append("ID_PedidoMallCampaña", pedidoMallID);
+        formData.append("ID_RegistroExcel", registroExcelID);
+        formData.append("var_año", año);
+        formData.append("var_cliente", cliente);
+        formData.append("correo", correo);
+        formData.append("fechaSubida", new Date().toISOString());
+
+        try {
+          const response = await fetch("AQUI_VA_LA_URL_DEL_FLUJO", {
+            method: "POST",
+            body: formData
+          });
+
+          if (!response.ok) throw new Error("Error en subida");
+
+        } catch (error) {
+          resultado.innerText = "Error al subir una o más fotos.";
+          return;
+        }
+      }
+
+      resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
+    });
+  </script>
+
+</body>
+</html>
