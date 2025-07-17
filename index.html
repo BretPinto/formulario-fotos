@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Subida de Fotos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar fotos de campaña</title>
     <style>
         body {
             font-family: Arial;
@@ -12,42 +11,37 @@
             margin: auto;
             text-align: center;
         }
-
         h2 {
             color: #6c2eb9;
-            font-size: 1.8em;
-            margin-bottom: 20px;
+            font-size: 22px;
         }
-
         label {
             display: block;
-            margin: 10px 0;
+            margin-top: 20px;
+            font-size: 16px;
         }
-
         button {
             margin-top: 20px;
             padding: 10px 20px;
             background: #6c2eb9;
             color: white;
             border: none;
-            cursor: pointer;
             border-radius: 8px;
-            font-size: 1em;
+            cursor: pointer;
+            font-size: 16px;
         }
-
         #resultado {
             margin-top: 20px;
+            font-size: 16px;
             font-weight: bold;
-            color: green;
         }
     </style>
 </head>
 <body>
+    <h2 id="titulo">Cargar fotos de campaña 17</h2>
 
-    <h2 id="Carga de fotos 14"></h2>
-
-    <p><strong>Mall:</strong> <span id="mall"></span></p>
-    <p><strong>Campaña:</strong> <span id="campaña"></span></p>
+    <p><strong>Mall:</strong> <span id="mall">Mall dinámico</span><br>
+    <strong>Campaña:</strong> <span id="campaña">Campaña dinámica</span></p>
 
     <label>Selecciona fotos:</label>
     <input type="file" id="fotos" multiple accept="image/*">
@@ -57,21 +51,23 @@
     <div id="resultado"></div>
 
     <script>
+        // Recibir parámetros desde Power Apps por URL
         const params = new URLSearchParams(window.location.search);
-        const mall = params.get('mall');
-        const campaña = params.get('campaña');
-        const pedidoID = parseInt(params.get('pedidoID'));
-        const campañaID = params.get('campañaID');
-        const pedidoMallID = parseInt(params.get('pedidoMallID'));
-        const registroExcelID = parseInt(params.get('registroExcelID'));
-        const año = parseInt(params.get('año'));
-        const cliente = params.get('cliente');
-        const correo = params.get('correo');
-        const url = "https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo";
+        const mall = params.get('mall') || 'Sin mall';
+        const campaña = params.get('campaña') || 'Sin campaña';
+        const pedidoID = params.get('pedidoID') || 0;
+        const campañaID = params.get('campañaID') || 'SINID';
+        const pedidoMallID = params.get('pedidoMallID') || 0;
+        const registroExcelID = params.get('registroExcelID') || 0;
+        const año = params.get('año') || 2025;
+        const cliente = params.get('cliente') || 'Cliente';
+        const correo = params.get('correo') || 'correo@realplaza.com.pe';
 
         document.getElementById('mall').textContent = mall;
         document.getElementById('campaña').textContent = campaña;
         document.getElementById('titulo').textContent = `Cargar fotos de campaña ${campañaID}`;
+
+        const url = "https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo";
 
         async function toBase64(file) {
             return new Promise((resolve, reject) => {
@@ -84,22 +80,27 @@
 
         async function subirFotos() {
             const files = document.getElementById('fotos').files;
+            const resultado = document.getElementById('resultado');
+
             if (files.length === 0) {
-                document.getElementById('resultado').innerText = "Por favor selecciona al menos una imagen.";
+                resultado.innerText = "Por favor selecciona al menos una imagen.";
+                resultado.style.color = "red";
                 return;
             }
 
-            document.getElementById('resultado').innerText = "Subiendo fotos...";
+            resultado.innerText = "Subiendo fotos...";
+            resultado.style.color = "black";
 
             const imagenes = [];
+
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const base64 = await toBase64(file);
                 imagenes.push({
                     ID_CampañaCargada: campañaID,
-                    ID_Pedido: pedidoID,
-                    ID_PedidoMallCampaña: pedidoMallID,
-                    ID_RegistroExcel: registroExcelID,
+                    ID_Pedido: parseInt(pedidoID),
+                    ID_PedidoMallCampaña: parseInt(pedidoMallID),
+                    ID_RegistroExcel: parseInt(registroExcelID),
                     Imagen: base64,
                     Nombre: file.name
                 });
@@ -113,13 +114,15 @@
                     },
                     body: JSON.stringify(imagenes)
                 });
-                if (!response.ok) throw new Error("Error en subida");
-            } catch (error) {
-                document.getElementById('resultado').innerText = "Error al subir una o más fotos.";
-                return;
-            }
 
-            document.getElementById('resultado').innerText = "¡Todas las fotos fueron subidas correctamente!";
+                if (!response.ok) throw new Error("Error en la subida");
+
+                resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
+                resultado.style.color = "green";
+            } catch (error) {
+                resultado.innerText = "Error al subir una o más fotos.";
+                resultado.style.color = "green";
+            }
         }
     </script>
 </body>
