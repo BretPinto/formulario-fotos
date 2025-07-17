@@ -47,7 +47,7 @@
 </head>
 <body>
 
-    <h2>Cargar fotos de campaña 26</h2>
+    <h2>Cargar fotos de campaña 27</h2>
      <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
@@ -86,50 +86,57 @@
         }
 
         async function subirFotos() {
-            const files = document.getElementById("fotos").files;
-            const resultado = document.getElementById("resultado");
+    const files = document.getElementById("fotos").files;
+    const resultado = document.getElementById("resultado");
+    const boton = document.querySelector("button");
 
-            if (files.length === 0) {
-                resultado.style.color = "red";
-                resultado.innerText = "Por favor selecciona al menos una imagen.";
-                return;
-            }
+    if (files.length === 0) {
+        resultado.style.color = "red";
+        resultado.innerText = "Por favor selecciona al menos una imagen.";
+        return;
+    }
 
-            resultado.style.color = "black";
-            resultado.innerText = "Subiendo fotos...";
+    resultado.style.color = "black";
+    resultado.innerText = "Subiendo fotos...";
 
-            try {
-                const imagenesArray = [];
+    try {
+        const imagenesArray = [];
 
-                for (let i = 0; i < files.length; i++) {
-                    const base64 = await toBase64(files[i]);
-                    imagenesArray.push({
-                        ID_CampañaCargada: campañaID,
-                        ID_Pedido: pedidoID,
-                        ID_PedidoMallCampaña: pedidoMallID,
-                        ID_RegistroExcel: registroExcelID,
-                        Imagen: base64,
-                        Nombre: files[i].name
-                    });
-                }
-
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(imagenesArray)
-                });
-
-                if (!response.ok) throw new Error("Error en subida");
-
-                resultado.style.color = "green";
-                resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
-            } catch (error) {
-                resultado.style.color = "red";
-                resultado.innerText = "Error al subir una o más fotos.";
-            }
+        for (let i = 0; i < files.length; i++) {
+            const base64 = await toBase64(files[i]);
+            imagenesArray.push({
+                ID_CampañaCargada: campañaID,
+                ID_Pedido: pedidoID,
+                ID_PedidoMallCampaña: pedidoMallID,
+                ID_RegistroExcel: registroExcelID,
+                Imagen: base64,
+                Nombre: files[i].name
+            });
         }
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(imagenesArray)
+        });
+
+        if (!response.ok) throw new Error("Error en subida");
+
+        resultado.style.color = "green";
+        resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
+
+        // Desactivar botón
+        boton.disabled = true;
+        boton.style.opacity = "0.5";
+        boton.style.cursor = "not-allowed";
+
+    } catch (error) {
+        resultado.style.color = "red";
+        resultado.innerText = "Error al subir una o más fotos.";
+    }
+}
     </script>
 </body>
 </html>
