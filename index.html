@@ -2,52 +2,81 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Subida de Fotos</title>
+    <title>Subir fotos</title>
     <style>
-        body {
-            font-family: Arial;
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            text-align: center;
-            font-size: 18px;
-        }
-        h2 {
-            color: #6c2eb9;
-            font-size: 22px;
-        }
-        label {
-            display: block;
-            margin: 20px 0 10px;
-        }
-        input[type="file"] {
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        button {
-            margin-top: 10px;
-            padding: 15px 30px;
-            background: #6c2eb9;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 8px;
-        }
-        #resultado {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        .error {
-            color: red;
-        }
-        .success {
-            color: green;
-        }
-    </style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        background-color: #ffffff;
+    }
+
+    .container {
+        margin-top: 50px;
+        width: 90%;
+        max-width: 400px;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    h2 {
+        color: #6c2eb9;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .info {
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    label {
+        display: block;
+        margin: 20px 0 10px;
+    }
+
+    input[type="file"] {
+        margin-bottom: 20px;
+        width: 100%;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 12px 20px;
+        width: 100%;
+        background: #6c2eb9;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #resultado {
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .success {
+        color: green;
+    }
+</style>
+
 </head>
 <body>
-    <h2>Cargar fotos de campaña 24</h2>
+
+    <h2>Cargar fotos de campaña 25</h2>
      <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
@@ -56,22 +85,23 @@
     <label>Selecciona fotos:</label>
     <input type="file" id="fotos" multiple accept="image/*">
     <button onclick="subirFotos()">Subir fotos</button>
+
     <div id="resultado"></div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const mall = decodeURIComponent(params.get("var_mall") || "");
-        const campaña = decodeURIComponent(params.get("Nombre_campaña") || "");
+        const mall = decodeURIComponent(params.get("var_mall") || "Sin mall");
+        const campaña = decodeURIComponent(params.get("Nombre_campaña") || "Sin campaña");
         const pedidoID = parseInt(params.get("ID_Pedido") || "0");
         const campañaID = params.get("ID_CampañaCargada") || "";
         const pedidoMallID = parseInt(params.get("ID_PedidoMallCampaña") || "0");
         const registroExcelID = parseInt(params.get("ID_RegistroExcel") || "0");
         const año = parseInt(params.get("var_año") || "0");
-        const cliente = decodeURIComponent(params.get("var_cliente") || "");
-        const correo = decodeURIComponent(params.get("correo") || "");
+        const cliente = decodeURIComponent(params.get("var_cliente") || "Sin cliente");
+        const correo = decodeURIComponent(params.get("correo") || "Sin correo");
 
-        document.getElementById("mall").innerText = mall;
-        document.getElementById("campaña").innerText = campaña;
+        document.getElementById("mall").textContent = mall;
+        document.getElementById("campaña").textContent = campaña;
 
         const url = "https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo";
 
@@ -88,58 +118,46 @@
             const files = document.getElementById("fotos").files;
             const resultado = document.getElementById("resultado");
 
-            if (!mall || !campaña) {
-                resultado.innerText = "Mall y Campaña son requeridos.";
-                resultado.className = "error";
-                return;
-            }
-
             if (files.length === 0) {
+                resultado.style.color = "red";
                 resultado.innerText = "Por favor selecciona al menos una imagen.";
-                resultado.className = "error";
                 return;
             }
 
+            resultado.style.color = "black";
             resultado.innerText = "Subiendo fotos...";
-            resultado.className = "";
-
-            const fotosArray = [];
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const base64 = await toBase64(file);
-                fotosArray.push({
-                    ID_CampañaCargada: campañaID,
-                    ID_Pedido: pedidoID,
-                    ID_PedidoMallCampaña: pedidoMallID,
-                    ID_RegistroExcel: registroExcelID,
-                    Imagen: base64,
-                    Nombre: file.name
-                });
-            }
 
             try {
+                const imagenesArray = [];
+
+                for (let i = 0; i < files.length; i++) {
+                    const base64 = await toBase64(files[i]);
+                    imagenesArray.push({
+                        ID_CampañaCargada: campañaID,
+                        ID_Pedido: pedidoID,
+                        ID_PedidoMallCampaña: pedidoMallID,
+                        ID_RegistroExcel: registroExcelID,
+                        Imagen: base64,
+                        Nombre: files[i].name
+                    });
+                }
+
                 const response = await fetch(url, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(fotosArray)
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(imagenesArray)
                 });
 
                 if (!response.ok) throw new Error("Error en subida");
 
+                resultado.style.color = "green";
                 resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
-                resultado.className = "success";
-                limpiarFormulario();
-            } catch {
+            } catch (error) {
+                resultado.style.color = "red";
                 resultado.innerText = "Error al subir una o más fotos.";
-                resultado.className = "error";
             }
-        }
-
-        function limpiarFormulario() {
-            document.getElementById("fotos").value = "";
-            setTimeout(() => {
-                document.getElementById("resultado").innerText = "";
-            }, 3000);
         }
     </script>
 </body>
