@@ -47,7 +47,7 @@
 </head>
 <body>
 
-    <h2>Cargar fotos de campaña 27</h2>
+    <h2>Cargar fotos de campaña 28</h2>
      <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
@@ -110,7 +110,12 @@
                 ID_PedidoMallCampaña: pedidoMallID,
                 ID_RegistroExcel: registroExcelID,
                 Imagen: base64,
-                Nombre: files[i].name
+                Nombre: files[i].name,
+                Mall: mall,
+                Campaña: campaña,
+                Año: año,
+                Cliente: cliente,
+                Correo: correo
             });
         }
 
