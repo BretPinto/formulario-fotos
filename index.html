@@ -5,48 +5,75 @@
     <title>Cargar fotos de campaña</title>
     <style>
         body {
-            font-family: Arial;
-            padding: 40px;
-            max-width: 600px;
-            margin: auto;
-        }
-        h2 {
-            color: #6c2eb9;
-            text-align: center;
-            font-size: 28px;
-        }
-        label {
-            display: block;
-            margin: 20px 0 10px 0;
-            font-size: 18px;
-        }
-        button {
-            margin-top: 30px;
-            padding: 15px 30px;
-            background: #6c2eb9;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            font-size: 20px;
-            border-radius: 10px;
-        }
-        #resultado {
-            margin-top: 20px;
-            color: green;
-            font-weight: bold;
-            text-align: center;
-        }
-        .info {
-            text-align: center;
-            font-size: 18px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+    font-family: Arial;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    background-color: #fff;
+    color: #333;
+}
+
+h2 {
+    color: #6c2eb9;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+label, strong {
+    font-size: 1.2rem;
+}
+
+input[type="file"] {
+    margin-top: 10px;
+    width: 100%;
+}
+
+button {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #6c2eb9;
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5a23a1;
+}
+
+#resultado {
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    label, strong {
+        font-size: 1.4rem;
+    }
+
+    #resultado {
+        font-size: 1.4rem;
+    }
+}
+
     </style>
 </head>
 <body>
-    <h2>Cargar fotos de campaña 10</h2>
+    <h2>Cargar fotos de campaña 11</h2>
 
     <div class="info">
         Mall: <span id="mall"></span><br>
