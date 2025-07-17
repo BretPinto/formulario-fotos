@@ -7,39 +7,47 @@
         body {
             font-family: Arial;
             padding: 20px;
-            max-width: 400px;
+            max-width: 600px;
             margin: auto;
             text-align: center;
+            font-size: 18px;
         }
         h2 {
             color: #6c2eb9;
+            font-size: 22px;
         }
         label {
             display: block;
             margin: 20px 0 10px;
         }
+        input[type="file"] {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
         button {
-            margin-top: 20px;
-            padding: 15px 40px;
+            margin-top: 10px;
+            padding: 15px 30px;
             background: #6c2eb9;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             border-radius: 8px;
         }
         #resultado {
             margin-top: 20px;
-            color: green;
             font-weight: bold;
         }
         .error {
             color: red;
         }
+        .success {
+            color: green;
+        }
     </style>
 </head>
 <body>
-    <h2>Cargar fotos de campaña 23</h2>
+    <h2>Cargar fotos de campaña 24</h2>
      <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
@@ -119,11 +127,11 @@
                 if (!response.ok) throw new Error("Error en subida");
 
                 resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
-                resultado.style.color = "green";
+                resultado.className = "success";
                 limpiarFormulario();
             } catch {
                 resultado.innerText = "Error al subir una o más fotos.";
-                resultado.style.color = "red";
+                resultado.className = "error";
             }
         }
 
@@ -131,7 +139,7 @@
             document.getElementById("fotos").value = "";
             setTimeout(() => {
                 document.getElementById("resultado").innerText = "";
-            }, 2000);
+            }, 3000);
         }
     </script>
 </body>
