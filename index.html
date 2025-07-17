@@ -2,135 +2,134 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cargar fotos de campaña</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subida de Fotos</title>
     <style>
         body {
             font-family: Arial;
             padding: 20px;
             max-width: 600px;
-            margin: auto;
-            text-align: center;
-            font-size: 1.3rem;
+            margin: 0 auto;
+            background-color: white;
         }
         h2 {
             color: #6c2eb9;
-            font-size: 1.7rem;
+            font-size: 6vw;
+            text-align: center;
         }
-        label {
+        label, p {
             display: block;
-            margin-top: 20px;
-            font-size: 1.3rem;
+            margin-top: 10px;
+            font-size: 4vw;
         }
         input[type="file"] {
-            margin-top: 10px;
-            font-size: 1rem;
+            width: 100%;
+            padding: 10px;
+            font-size: 4vw;
         }
         button {
-            margin-top: 30px;
-            padding: 15px 40px;
+            display: block;
+            width: 100%;
+            padding: 15px;
             background: #6c2eb9;
             color: white;
-            font-size: 1.3rem;
             border: none;
-            border-radius: 10px;
             cursor: pointer;
+            margin-top: 20px;
+            font-size: 5vw;
+            border-radius: 5px;
         }
         #resultado {
-            margin-top: 20px;
-            font-weight: bold;
+            font-size: 4vw;
             color: green;
-            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
-
-<body onload="cargarParametros()">
-
-    <h2>Cargar fotos de campaña 7</h2>
-    <div>
+<body>
+    <h2>Cargar fotos de campaña 8</h2>
+     <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
     </div>
-
     <label>Selecciona fotos:</label>
-    <input type="file" id="fotos" multiple accept="image/*">
-
+    <input type="file" id="fileInput" multiple accept="image/*">
     <button onclick="subirFotos()">Subir fotos</button>
-
-    <div id="resultado"></div>
+    <p id="resultado"></p>
 
     <script>
-        let mall, campaña, pedidoID, campañaID, pedidoMallID, registroExcelID, año, cliente, correo;
+        // Leer parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const mall = urlParams.get('var_mall') || '';
+        const campaña = urlParams.get('Nombre_campaña') || '';
+        const pedidoID = urlParams.get('ID_Pedido') || '';
+        const campañaID = urlParams.get('ID_CampañaCargada') || '';
+        const pedidoMallID = urlParams.get('ID_PedidoMallCampaña') || '';
+        const registroExcelID = urlParams.get('ID_RegistroExcel') || '';
+        const año = urlParams.get('var_año') || '';
+        const cliente = urlParams.get('var_cliente') || '';
+        const correo = urlParams.get('correo') || '';
 
-        function cargarParametros() {
-            const params = new URLSearchParams(window.location.search);
-            mall = params.get('mall') || '';
-            campaña = params.get('campania') || '';
-            pedidoID = params.get('pedidoID') || '';
-            campañaID = params.get('campaniaID') || '';
-            pedidoMallID = params.get('pedidoMallID') || '';
-            registroExcelID = params.get('registroExcelID') || '';
-            año = params.get('año') || '';
-            cliente = params.get('cliente') || '';
-            correo = params.get('correo') || '';
-
-            document.getElementById('mall').textContent = mall;
-            document.getElementById('campaña').textContent = campaña;
-        }
+        document.getElementById('mall').innerText = mall;
+        document.getElementById('campaña').innerText = campaña;
 
         async function subirFotos() {
-            const files = document.getElementById('fotos').files;
+            const files = document.getElementById('fileInput').files;
             const resultado = document.getElementById('resultado');
-            resultado.innerText = "Subiendo fotos...";
 
             if (files.length === 0) {
-                resultado.innerText = "No has seleccionado fotos.";
+                resultado.innerText = "Por favor selecciona al menos una imagen.";
                 return;
             }
 
-            const imagenes = [];
+            resultado.innerText = "Subiendo fotos...";
 
-            for (const file of files) {
-                const base64 = await convertirABase64(file);
-                imagenes.push({
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const base64 = await toBase64(file);
+
+                const payload = {
+                    archivo: base64,
+                    Nombre_campaña: campaña,
+                    var_mall: mall,
+                    ID_Pedido: pedidoID,
                     ID_CampañaCargada: campañaID,
-                    ID_Pedido: parseInt(pedidoID),
-                    ID_PedidoMallCampaña: parseInt(pedidoMallID),
-                    ID_RegistroExcel: parseInt(registroExcelID),
-                    Imagen: base64,
-                    Nombre: file.name
-                });
+                    ID_PedidoMallCampaña: pedidoMallID,
+                    ID_RegistroExcel: registroExcelID,
+                    var_año: año,
+                    var_cliente: cliente,
+                    correo: correo,
+                    fechaSubida: new Date().toISOString()
+                };
+
+                try {
+                    const response = await fetch("https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error("Error en subida");
+
+                } catch (error) {
+                    resultado.innerText = "Error al subir una o más fotos.";
+                    return;
+                }
             }
 
-            const payload = JSON.stringify(imagenes);
-
-            try {
-                const response = await fetch("https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: payload
-                });
-
-                if (!response.ok) throw new Error("Error en subida");
-
-                resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
-            } catch (error) {
-                resultado.innerText = "Error al subir una o más fotos.";
-            }
+            resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
         }
 
-        function convertirABase64(file) {
+        function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => resolve(reader.result);
-                reader.onerror = (error) => reject(error);
+                reader.onerror = error => reject(error);
             });
         }
     </script>
-
 </body>
 </html>
