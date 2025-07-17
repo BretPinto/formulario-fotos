@@ -2,23 +2,22 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cargar fotos de campaña</title>
+    <title>Subida de Fotos</title>
     <style>
         body {
             font-family: Arial;
             padding: 20px;
             max-width: 400px;
-            margin: auto;
+            margin: 0 auto;
             text-align: center;
         }
         h2 {
             color: #6c2eb9;
-            font-size: 22px;
+            font-size: 1.4em;
         }
         label {
             display: block;
-            margin-top: 20px;
-            font-size: 16px;
+            margin-top: 15px;
         }
         button {
             margin-top: 20px;
@@ -28,44 +27,44 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            width: 90%;
+            font-size: 1em;
         }
         #resultado {
             margin-top: 20px;
-            font-size: 16px;
+            color: green;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h2 id="titulo">Cargar fotos de campaña 17</h2>
-
-    <p><strong>Mall:</strong> <span id="mall">Mall dinámico</span><br>
-    <strong>Campaña:</strong> <span id="campaña">Campaña dinámica</span></p>
+    <h2>Cargar fotos de campaña 18</h2>
+    <div>
+        <strong>Mall:</strong> <span id="mall"></span><br>
+        <strong>Campaña:</strong> <span id="campaña"></span><br>
+    </div>
 
     <label>Selecciona fotos:</label>
     <input type="file" id="fotos" multiple accept="image/*">
-
     <button onclick="subirFotos()">Subir fotos</button>
 
     <div id="resultado"></div>
 
     <script>
-        // Recibir parámetros desde Power Apps por URL
         const params = new URLSearchParams(window.location.search);
-        const mall = params.get('mall') || 'Sin mall';
-        const campaña = params.get('campaña') || 'Sin campaña';
-        const pedidoID = params.get('pedidoID') || 0;
-        const campañaID = params.get('campañaID') || 'SINID';
-        const pedidoMallID = params.get('pedidoMallID') || 0;
-        const registroExcelID = params.get('registroExcelID') || 0;
-        const año = params.get('año') || 2025;
-        const cliente = params.get('cliente') || 'Cliente';
-        const correo = params.get('correo') || 'correo@realplaza.com.pe';
+        const mall = decodeURIComponent(params.get('var_mall')) || 'Sin mall';
+        const campaña = decodeURIComponent(params.get('Nombre_campaña')) || 'Sin campaña';
+        const pedidoID = params.get('ID_Pedido');
+        const campañaID = params.get('ID_CampañaCargada');
+        const pedidoMallID = params.get('ID_PedidoMallCampaña');
+        const registroExcelID = params.get('ID_RegistroExcel');
+        const año = params.get('var_año');
+        const cliente = decodeURIComponent(params.get('var_cliente'));
+        const correo = params.get('correo');
 
         document.getElementById('mall').textContent = mall;
         document.getElementById('campaña').textContent = campaña;
-        document.getElementById('titulo').textContent = `Cargar fotos de campaña ${campañaID}`;
+        document.getElementById('titulo').textContent = "Cargar fotos de campaña " + (campaña || "SINID");
 
         const url = "https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo";
 
@@ -80,33 +79,28 @@
 
         async function subirFotos() {
             const files = document.getElementById('fotos').files;
-            const resultado = document.getElementById('resultado');
-
             if (files.length === 0) {
-                resultado.innerText = "Por favor selecciona al menos una imagen.";
-                resultado.style.color = "red";
+                document.getElementById('resultado').innerText = "Por favor selecciona al menos una imagen.";
                 return;
             }
 
-            resultado.innerText = "Subiendo fotos...";
-            resultado.style.color = "black";
-
-            const imagenes = [];
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const base64 = await toBase64(file);
-                imagenes.push({
-                    ID_CampañaCargada: campañaID,
-                    ID_Pedido: parseInt(pedidoID),
-                    ID_PedidoMallCampaña: parseInt(pedidoMallID),
-                    ID_RegistroExcel: parseInt(registroExcelID),
-                    Imagen: base64,
-                    Nombre: file.name
-                });
-            }
+            document.getElementById('resultado').innerText = "Subiendo fotos...";
 
             try {
+                const imagenes = [];
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const base64 = await toBase64(file);
+                    imagenes.push({
+                        ID_CampañaCargada: campañaID,
+                        ID_Pedido: parseInt(pedidoID),
+                        ID_PedidoMallCampaña: parseInt(pedidoMallID),
+                        ID_RegistroExcel: parseInt(registroExcelID),
+                        Imagen: base64,
+                        Nombre: file.name
+                    });
+                }
+
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
@@ -115,13 +109,13 @@
                     body: JSON.stringify(imagenes)
                 });
 
-                if (!response.ok) throw new Error("Error en la subida");
+                if (!response.ok) throw new Error("Error en subida");
 
-                resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
-                resultado.style.color = "green";
+                document.getElementById('resultado').innerText = "¡Todas las fotos fueron subidas correctamente!";
+                document.getElementById('resultado').style.color = "green";
             } catch (error) {
-                resultado.innerText = "Error al subir una o más fotos.";
-                resultado.style.color = "green";
+                document.getElementById('resultado').innerText = "Error al subir una o más fotos.";
+                document.getElementById('resultado').style.color = "red";
             }
         }
     </script>
