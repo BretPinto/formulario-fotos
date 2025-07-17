@@ -8,28 +8,34 @@
             font-family: Arial;
             padding: 20px;
             max-width: 400px;
-            margin: 0 auto;
+            margin: auto;
             text-align: center;
         }
+
         h2 {
             color: #6c2eb9;
-            font-size: 1.4em;
+            font-size: 20px;
+            margin-bottom: 10px;
         }
+
         label {
             display: block;
-            margin-top: 15px;
+            margin-top: 10px;
+            font-size: 14px;
         }
+
         button {
             margin-top: 20px;
             padding: 10px 20px;
             background: #6c2eb9;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            width: 90%;
-            font-size: 1em;
+            width: 80%;
+            font-size: 16px;
         }
+
         #resultado {
             margin-top: 20px;
             color: green;
@@ -37,34 +43,37 @@
         }
     </style>
 </head>
+
 <body>
-    <h2>Cargar fotos de campaña 18</h2>
-    <div>
+    <h2>Cargar fotos de campaña 20</h2>
+     <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
     </div>
 
     <label>Selecciona fotos:</label>
     <input type="file" id="fotos" multiple accept="image/*">
+
     <button onclick="subirFotos()">Subir fotos</button>
 
     <div id="resultado"></div>
 
     <script>
+        // Parámetros desde la URL de Power Apps
         const params = new URLSearchParams(window.location.search);
-        const mall = decodeURIComponent(params.get('var_mall')) || 'Sin mall';
-        const campaña = decodeURIComponent(params.get('Nombre_campaña')) || 'Sin campaña';
-        const pedidoID = params.get('ID_Pedido');
-        const campañaID = params.get('ID_CampañaCargada');
-        const pedidoMallID = params.get('ID_PedidoMallCampaña');
-        const registroExcelID = params.get('ID_RegistroExcel');
-        const año = params.get('var_año');
-        const cliente = decodeURIComponent(params.get('var_cliente'));
-        const correo = params.get('correo');
+        const mall = decodeURIComponent(params.get("var_mall") || "Sin mall");
+        const campaña = decodeURIComponent(params.get("Nombre_campaña") || "Sin campaña");
+        const pedidoID = parseInt(params.get("ID_Pedido") || "0");
+        const campañaID = params.get("ID_CampañaCargada") || "";
+        const pedidoMallID = parseInt(params.get("ID_PedidoMallCampaña") || "0");
+        const registroExcelID = parseInt(params.get("ID_RegistroExcel") || "0");
+        const año = parseInt(params.get("var_año") || "0");
+        const cliente = decodeURIComponent(params.get("var_cliente") || "Sin cliente");
+        const correo = decodeURIComponent(params.get("correo") || "Sin correo");
 
-        document.getElementById('mall').textContent = mall;
-        document.getElementById('campaña').textContent = campaña;
-        document.getElementById('titulo').textContent = "Cargar fotos de campaña " + (campaña || "SINID");
+        document.getElementById("mall").innerText = mall;
+        document.getElementById("campaña").innerText = campaña;
+        document.getElementById("titulo").innerText = `Cargar fotos de campaña ${campañaID || "SINID"}`;
 
         const url = "https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo";
 
@@ -79,23 +88,29 @@
 
         async function subirFotos() {
             const files = document.getElementById('fotos').files;
+            const resultado = document.getElementById('resultado');
+
             if (files.length === 0) {
-                document.getElementById('resultado').innerText = "Por favor selecciona al menos una imagen.";
+                resultado.innerText = "Por favor selecciona al menos una imagen.";
+                resultado.style.color = "red";
                 return;
             }
 
-            document.getElementById('resultado').innerText = "Subiendo fotos...";
+            resultado.innerText = "Subiendo fotos...";
+            resultado.style.color = "black";
 
             try {
                 const imagenes = [];
+
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     const base64 = await toBase64(file);
+
                     imagenes.push({
                         ID_CampañaCargada: campañaID,
-                        ID_Pedido: parseInt(pedidoID),
-                        ID_PedidoMallCampaña: parseInt(pedidoMallID),
-                        ID_RegistroExcel: parseInt(registroExcelID),
+                        ID_Pedido: pedidoID,
+                        ID_PedidoMallCampaña: pedidoMallID,
+                        ID_RegistroExcel: registroExcelID,
                         Imagen: base64,
                         Nombre: file.name
                     });
@@ -111,11 +126,12 @@
 
                 if (!response.ok) throw new Error("Error en subida");
 
-                document.getElementById('resultado').innerText = "¡Todas las fotos fueron subidas correctamente!";
-                document.getElementById('resultado').style.color = "green";
+                resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
+                resultado.style.color = "green";
+
             } catch (error) {
-                document.getElementById('resultado').innerText = "Error al subir una o más fotos.";
-                document.getElementById('resultado').style.color = "red";
+                resultado.innerText = "Error al subir una o más fotos.";
+                resultado.style.color = "red";
             }
         }
     </script>
