@@ -7,45 +7,40 @@
         body {
             font-family: Arial;
             padding: 20px;
-            max-width: 400px;
+            max-width: 600px;
             margin: auto;
             text-align: center;
         }
-
         h2 {
             color: #6c2eb9;
-            font-size: 20px;
-            margin-bottom: 10px;
         }
-
         label {
             display: block;
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 20px;
+            font-size: 18px;
         }
-
+        input[type="file"] {
+            margin: 10px 0;
+        }
         button {
             margin-top: 20px;
-            padding: 10px 20px;
+            padding: 15px 40px;
             background: #6c2eb9;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
-            width: 80%;
-            font-size: 16px;
         }
-
         #resultado {
             margin-top: 20px;
-            color: green;
+            font-size: 18px;
             font-weight: bold;
         }
     </style>
 </head>
-
 <body>
-    <h2>Cargar fotos de campaña 20</h2>
+    <h2>Cargar fotos de campaña 21</h2>
      <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
@@ -53,14 +48,13 @@
 
     <label>Selecciona fotos:</label>
     <input type="file" id="fotos" multiple accept="image/*">
-
     <button onclick="subirFotos()">Subir fotos</button>
 
     <div id="resultado"></div>
 
     <script>
-        // Parámetros desde la URL de Power Apps
         const params = new URLSearchParams(window.location.search);
+
         const mall = decodeURIComponent(params.get("var_mall") || "Sin mall");
         const campaña = decodeURIComponent(params.get("Nombre_campaña") || "Sin campaña");
         const pedidoID = parseInt(params.get("ID_Pedido") || "0");
@@ -71,9 +65,9 @@
         const cliente = decodeURIComponent(params.get("var_cliente") || "Sin cliente");
         const correo = decodeURIComponent(params.get("correo") || "Sin correo");
 
-        document.getElementById("mall").innerText = mall;
-        document.getElementById("campaña").innerText = campaña;
-        document.getElementById("titulo").innerText = `Cargar fotos de campaña ${campañaID || "SINID"}`;
+        document.getElementById("mall").textContent = mall;
+        document.getElementById("campaña").textContent = campaña;
+        document.getElementById("titulo").textContent = "Cargar fotos de campaña " + campañaID;
 
         const url = "https://prod-127.westus.logic.azure.com:443/workflows/54cdd82f572842a6b1726f5d0409ec1a/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-ZNGVvTenjqprQzZluJyUyiEVeArcaJoe014TU-pXBo";
 
@@ -87,8 +81,8 @@
         }
 
         async function subirFotos() {
-            const files = document.getElementById('fotos').files;
-            const resultado = document.getElementById('resultado');
+            const files = document.getElementById("fotos").files;
+            const resultado = document.getElementById("resultado");
 
             if (files.length === 0) {
                 resultado.innerText = "Por favor selecciona al menos una imagen.";
@@ -99,23 +93,22 @@
             resultado.innerText = "Subiendo fotos...";
             resultado.style.color = "black";
 
+            const imagenes = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const base64 = await toBase64(file);
+                imagenes.push({
+                    ID_CampañaCargada: campañaID,
+                    ID_Pedido: pedidoID,
+                    ID_PedidoMallCampaña: pedidoMallID,
+                    ID_RegistroExcel: registroExcelID,
+                    Imagen: base64,
+                    Nombre: file.name
+                });
+            }
+
             try {
-                const imagenes = [];
-
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const base64 = await toBase64(file);
-
-                    imagenes.push({
-                        ID_CampañaCargada: campañaID,
-                        ID_Pedido: pedidoID,
-                        ID_PedidoMallCampaña: pedidoMallID,
-                        ID_RegistroExcel: registroExcelID,
-                        Imagen: base64,
-                        Nombre: file.name
-                    });
-                }
-
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
@@ -128,7 +121,6 @@
 
                 resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
                 resultado.style.color = "green";
-
             } catch (error) {
                 resultado.innerText = "Error al subir una o más fotos.";
                 resultado.style.color = "red";
