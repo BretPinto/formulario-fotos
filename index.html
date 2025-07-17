@@ -2,81 +2,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Subir fotos</title>
+    <title>Cargar fotos de campaña</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        min-height: 100vh;
-        background-color: #ffffff;
-    }
-
-    .container {
-        margin-top: 50px;
-        width: 90%;
-        max-width: 400px;
-        padding: 20px;
-        box-sizing: border-box;
-        text-align: center;
-    }
-
-    h2 {
-        color: #6c2eb9;
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    .info {
-        margin-bottom: 20px;
-        font-size: 16px;
-    }
-
-    label {
-        display: block;
-        margin: 20px 0 10px;
-    }
-
-    input[type="file"] {
-        margin-bottom: 20px;
-        width: 100%;
-        font-size: 14px;
-    }
-
-    button {
-        padding: 12px 20px;
-        width: 100%;
-        background: #6c2eb9;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    #resultado {
-        margin-top: 20px;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    .error {
-        color: red;
-    }
-
-    .success {
-        color: green;
-    }
-</style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+        h2 {
+            color: #6c2eb9;
+            font-size: 1.7rem;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+            font-size: 1.3rem;
+        }
+        input[type="file"] {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        button {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: #6c2eb9;
+            color: white;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+            font-size: 1.2rem;
+        }
+    </style>
 
 </head>
 <body>
 
-    <h2>Cargar fotos de campaña 25</h2>
+    <h2>Cargar fotos de campaña 26</h2>
      <div>
         <strong>Mall:</strong> <span id="mall"></span><br>
         <strong>Campaña:</strong> <span id="campaña"></span><br>
