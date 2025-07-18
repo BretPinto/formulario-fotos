@@ -17,28 +17,26 @@
             background-color: rgba(106, 13, 173, 1);
             padding: 10px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            position: relative;
         }
         .barra-superior h1 {
             color: white;
             font-size: 1.3rem;
             margin: 0;
-            padding-left: 10px;
+            text-align: center;
         }
         .barra-superior img {
             width: 35px;
             height: 35px;
             cursor: pointer;
-            margin-right: 10px;
+            position: absolute;
+            right: 10px;
         }
         .contenido {
             padding: 20px;
             text-align: center;
-        }
-        h2 {
-            color: #6c2eb9;
-            font-size: 1.5rem;
         }
         label {
             display: block;
@@ -70,12 +68,11 @@
 <body>
 
     <div class="barra-superior">
-        <h1>Cargar fotos de campaña</h1>
+        <h1>Cargar fotos de campaña 33</h1>
         <img src="https://bretpinto.github.io/formulario-fotos/back.png" onclick="history.back()">
     </div>
 
     <div class="contenido">
-        <h2>Cargar fotos de campaña 33</h2>
         <div>
             <strong>Mall:</strong> <span id="mall"></span><br>
             <strong>Campaña:</strong> <span id="campaña"></span><br>
