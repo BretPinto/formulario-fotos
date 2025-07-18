@@ -7,57 +7,95 @@
     <style>
         body {
             font-family: Arial;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 1.2rem;
+            background-color: #fff;
+        }
+
+        .barra-superior {
+            background-color: rgba(106, 13, 173, 1);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .boton-regresar {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .contenido {
             max-width: 600px;
             margin: auto;
-            text-align: center;
-            font-size: 1.3rem;
+            padding: 20px;
         }
+
         h2 {
             color: #6c2eb9;
             font-size: 1.7rem;
         }
+
         label {
             display: block;
             margin-top: 20px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
+
         input[type="file"] {
             margin-top: 10px;
             font-size: 1rem;
         }
+
         button {
             margin-top: 30px;
             padding: 15px 40px;
             background: #6c2eb9;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             border: none;
             border-radius: 10px;
             cursor: pointer;
         }
+
         #resultado {
             margin-top: 20px;
             font-weight: bold;
             color: green;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
     </style>
-
 </head>
 <body>
 
-    <h2>Cargar fotos de campaña 30</h2>
-     <div>
-        <strong>Mall:</strong> <span id="mall"></span><br>
-        <strong>Campaña:</strong> <span id="campaña"></span><br>
+    <div class="barra-superior">
+        <button class="boton-regresar" onclick="window.location.href='https://apps.powerapps.com/play/e/default-5daabe65-ff53-4336-a448-2f61ecf0b059/a/20a29b7c-777a-4339-8d67-1a046496e223?tenantId=5daabe65-ff53-4336-a448-2f61ecf0b059&hint=67909ce0-afa8-41d5-892f-9732f91ef48f&sourcetime=1752797781490&source=portal&hidenavbar=true'">&#x25C0; Atrás</button>
+        Cargar fotos de campaña
     </div>
 
-    <label>Selecciona fotos:</label>
-    <input type="file" id="fotos" multiple accept="image/*">
-    <button onclick="subirFotos()">Subir fotos</button>
+    <div class="contenido">
+        <h2>Cargar fotos de campaña 31</h2>
+        <div>
+            <strong>Mall:</strong> <span id="mall"></span><br>
+            <strong>Campaña:</strong> <span id="campaña"></span><br>
+        </div>
 
-    <div id="resultado"></div>
+        <label>Selecciona fotos:</label>
+        <input type="file" id="fotos" multiple accept="image/*">
+        <button onclick="subirFotos()">Subir fotos</button>
+
+        <div id="resultado"></div>
+    </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -71,7 +109,6 @@
         const cliente = decodeURIComponent(params.get("var_cliente") || "Sin cliente");
         const correo = decodeURIComponent(params.get("correo") || "Sin correo");
         const campañaProvideo = decodeURIComponent(params.get("Campaña_provideo") || "Sin campaña_provideo");
-
 
         document.getElementById("mall").textContent = mall;
         document.getElementById("campaña").textContent = campaña;
@@ -88,63 +125,62 @@
         }
 
         async function subirFotos() {
-    const files = document.getElementById("fotos").files;
-    const resultado = document.getElementById("resultado");
-    const boton = document.querySelector("button");
+            const files = document.getElementById("fotos").files;
+            const resultado = document.getElementById("resultado");
+            const boton = document.querySelector(".contenido button");
 
-    if (files.length === 0) {
-        resultado.style.color = "red";
-        resultado.innerText = "Por favor selecciona al menos una imagen.";
-        return;
-    }
+            if (files.length === 0) {
+                resultado.style.color = "red";
+                resultado.innerText = "Por favor selecciona al menos una imagen.";
+                return;
+            }
 
-    resultado.style.color = "black";
-    resultado.innerText = "Subiendo fotos...";
+            resultado.style.color = "black";
+            resultado.innerText = "Subiendo fotos...";
 
-    try {
-        const imagenesArray = [];
+            try {
+                const imagenesArray = [];
 
-        for (let i = 0; i < files.length; i++) {
-            const base64 = await toBase64(files[i]);
-            imagenesArray.push({
-                ID_CampañaCargada: campañaID,
-                ID_Pedido: pedidoID,
-                ID_PedidoMallCampaña: pedidoMallID,
-                ID_RegistroExcel: registroExcelID,
-                Imagen: base64,
-                Nombre: files[i].name,
-                Mall: mall,
-                Campaña: campaña,
-                Año: año,
-                Cliente: cliente,
-                Correo: correo,
-                Campaña_provideo: campañaProvideo
-            });
+                for (let i = 0; i < files.length; i++) {
+                    const base64 = await toBase64(files[i]);
+                    imagenesArray.push({
+                        ID_CampañaCargada: campañaID,
+                        ID_Pedido: pedidoID,
+                        ID_PedidoMallCampaña: pedidoMallID,
+                        ID_RegistroExcel: registroExcelID,
+                        Imagen: base64,
+                        Nombre: files[i].name,
+                        Mall: mall,
+                        Campaña: campaña,
+                        Año: año,
+                        Cliente: cliente,
+                        Correo: correo,
+                        Campaña_provideo: campañaProvideo
+                    });
+                }
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(imagenesArray)
+                });
+
+                if (!response.ok) throw new Error("Error en subida");
+
+                resultado.style.color = "green";
+                resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
+
+                boton.disabled = true;
+                boton.style.opacity = "0.5";
+                boton.style.cursor = "not-allowed";
+
+            } catch (error) {
+                resultado.style.color = "red";
+                resultado.innerText = "Error al subir una o más fotos.";
+            }
         }
-
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(imagenesArray)
-        });
-
-        if (!response.ok) throw new Error("Error en subida");
-
-        resultado.style.color = "green";
-        resultado.innerText = "¡Todas las fotos fueron subidas correctamente!";
-
-        // Desactivar botón
-        boton.disabled = true;
-        boton.style.opacity = "0.5";
-        boton.style.cursor = "not-allowed";
-
-    } catch (error) {
-        resultado.style.color = "red";
-        resultado.innerText = "Error al subir una o más fotos.";
-    }
-}
     </script>
 </body>
 </html>
