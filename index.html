@@ -68,7 +68,7 @@
 <body>
 
     <div class="barra-superior">
-        <h1>Cargar fotos de campaña 34</h1>
+        <h1>Cargar fotos de campaña 35</h1>
         <img src="https://bretpinto.github.io/formulario-fotos/back.png" onclick="history.back()">
     </div>
 
@@ -106,11 +106,27 @@
         async function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const maxWidth = 1200; // Máximo ancho permitido (puedes ajustarlo)
+                        const scaleSize = maxWidth / img.width;
+                        canvas.width = maxWidth;
+                        canvas.height = img.height * scaleSize;
+        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); // 0.7 = calidad buena, peso bajo
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = reject;
+                    img.src = event.target.result;
+                };
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
-        }
+    }
 
         async function subirFotos() {
             const files = document.getElementById("fotos").files;
