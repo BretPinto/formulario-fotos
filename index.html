@@ -68,7 +68,7 @@
 <body>
 
     <div class="barra-superior">
-        <h1>Cargar fotos de campaña 36</h1>
+        <h1>Cargar fotos de campaña 37</h1>
         <img src="https://bretpinto.github.io/formulario-fotos/back.png" onclick="history.back()">
     </div>
 
@@ -128,26 +128,32 @@
             });
     }
 
-                const archivoInput = document.getElementById("fotos");
+        const archivoInput = document.getElementById("fotos");
         const boton = document.querySelector("button");
         const resultado = document.getElementById("resultado");
         
         const mensajeLimite = document.createElement("div");
-        mensajeLimite.style.color = "red";
+        mensajeLimite.style.color = "green";
         mensajeLimite.style.fontSize = "0.8rem";
+        mensajeLimite.style.marginTop = "10px";
         mensajeLimite.innerText = "Elija hasta 20 fotos por carga";
         archivoInput.parentNode.insertBefore(mensajeLimite, archivoInput.nextSibling);
         
         archivoInput.addEventListener("change", () => {
             if (archivoInput.files.length > 20) {
                 boton.disabled = true;
+                boton.style.opacity = "0.5";
+                boton.style.cursor = "not-allowed";
                 resultado.style.color = "red";
                 resultado.innerText = "Cargue solo hasta 20 fotos para subir las fotos";
             } else {
                 boton.disabled = false;
+                boton.style.opacity = "1";
+                boton.style.cursor = "pointer";
                 resultado.innerText = "";
             }
         });
+
 
         async function subirFotos() {
             const files = document.getElementById("fotos").files;
