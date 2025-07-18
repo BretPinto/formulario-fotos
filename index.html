@@ -10,24 +10,29 @@
             padding: 0;
             margin: 0;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             background-color: #fff;
         }
 
         .barra-superior {
             background-color: rgba(106, 13, 173, 1);
             color: white;
-            padding: 10px;
-            text-align: center;
-            font-size: 1.4rem;
+            padding: 15px;
+            font-size: 1.3rem;
             font-weight: bold;
             position: relative;
+        }
+
+        .barra-superior h1 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: white;
         }
 
         .boton-regresar {
             position: absolute;
             left: 10px;
-            top: 10px;
+            top: 12px;
             background: none;
             border: none;
             color: white;
@@ -43,13 +48,14 @@
 
         h2 {
             color: #6c2eb9;
-            font-size: 1.7rem;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
         label {
             display: block;
             margin-top: 20px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         input[type="file"] {
@@ -59,10 +65,10 @@
 
         button {
             margin-top: 30px;
-            padding: 15px 40px;
+            padding: 12px 30px;
             background: #6c2eb9;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -72,19 +78,18 @@
             margin-top: 20px;
             font-weight: bold;
             color: green;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
 
     <div class="barra-superior">
-        <button class="boton-regresar" onclick="window.location.href='https://apps.powerapps.com/play/e/default-5daabe65-ff53-4336-a448-2f61ecf0b059/a/20a29b7c-777a-4339-8d67-1a046496e223?tenantId=5daabe65-ff53-4336-a448-2f61ecf0b059&hint=67909ce0-afa8-41d5-892f-9732f91ef48f&sourcetime=1752797781490&source=portal&hidenavbar=true'">&#x25C0; Atrás</button>
-        Cargar fotos de campaña
+        <button class="boton-regresar" onclick="history.back()">&#x25C0;</button>
+        <h1>Cargar fotos de campaña 32</h1>
     </div>
 
     <div class="contenido">
-        <h2>Cargar fotos de campaña 31</h2>
         <div>
             <strong>Mall:</strong> <span id="mall"></span><br>
             <strong>Campaña:</strong> <span id="campaña"></span><br>
