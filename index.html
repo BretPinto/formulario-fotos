@@ -9,63 +9,49 @@
             font-family: Arial;
             padding: 0;
             margin: 0;
-            text-align: center;
-            font-size: 1.1rem;
-            background-color: #fff;
-        }
-
-        .barra-superior {
-            background-color: rgba(106, 13, 173, 1);
-            color: white;
-            padding: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            position: relative;
-        }
-
-        .barra-superior h1 {
-            margin: 0;
-            font-size: 1.3rem;
-            color: white;
-        }
-
-        .boton-regresar {
-            position: absolute;
-            left: 10px;
-            top: 12px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
-
-        .contenido {
             max-width: 600px;
             margin: auto;
-            padding: 20px;
+            font-size: 1.1rem;
         }
-
+        .barra-superior {
+            background-color: rgba(106, 13, 173, 1);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .barra-superior h1 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            padding-left: 10px;
+        }
+        .barra-superior img {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .contenido {
+            padding: 20px;
+            text-align: center;
+        }
         h2 {
             color: #6c2eb9;
             font-size: 1.5rem;
-            margin-bottom: 10px;
         }
-
         label {
             display: block;
             margin-top: 20px;
             font-size: 1.1rem;
         }
-
         input[type="file"] {
             margin-top: 10px;
             font-size: 1rem;
         }
-
         button {
             margin-top: 30px;
-            padding: 12px 30px;
+            padding: 15px 40px;
             background: #6c2eb9;
             color: white;
             font-size: 1.1rem;
@@ -73,7 +59,6 @@
             border-radius: 10px;
             cursor: pointer;
         }
-
         #resultado {
             margin-top: 20px;
             font-weight: bold;
@@ -85,11 +70,12 @@
 <body>
 
     <div class="barra-superior">
-        <button class="boton-regresar" onclick="history.back()">&#x25C0;</button>
-        <h1>Cargar fotos de campaña 32</h1>
+        <h1>Cargar fotos de campaña</h1>
+        <img src="https://bretpinto.github.io/formulario-fotos/back.png" onclick="history.back()">
     </div>
 
     <div class="contenido">
+        <h2>Cargar fotos de campaña 33</h2>
         <div>
             <strong>Mall:</strong> <span id="mall"></span><br>
             <strong>Campaña:</strong> <span id="campaña"></span><br>
@@ -132,7 +118,7 @@
         async function subirFotos() {
             const files = document.getElementById("fotos").files;
             const resultado = document.getElementById("resultado");
-            const boton = document.querySelector(".contenido button");
+            const boton = document.querySelector("button");
 
             if (files.length === 0) {
                 resultado.style.color = "red";
