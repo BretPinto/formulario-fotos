@@ -68,7 +68,7 @@
 <body>
 
     <div class="barra-superior">
-        <h1>Cargar fotos de campaña 38</h1>
+        <h1>Cargar fotos de campaña 40</h1>
         <img src="https://bretpinto.github.io/formulario-fotos/back.png" onclick="history.back()">
     </div>
 
@@ -136,16 +136,16 @@
         mensajeLimite.style.color = "green";
         mensajeLimite.style.fontSize = "0.8rem";
         mensajeLimite.style.marginTop = "10px";
-        mensajeLimite.innerText = "Elija hasta 20 fotos por carga";
+        mensajeLimite.innerText = "Elija hasta 30 fotos por carga";
         archivoInput.parentNode.insertBefore(mensajeLimite, archivoInput.nextSibling);
         
         archivoInput.addEventListener("change", () => {
-            if (archivoInput.files.length > 20) {
+            if (archivoInput.files.length > 30) {
                 boton.disabled = true;
                 boton.style.opacity = "0.5";
                 boton.style.cursor = "not-allowed";
                 resultado.style.color = "red";
-                resultado.innerText = "Cargue solo hasta 20 fotos para subir.";
+                resultado.innerText = "Cargue solo hasta 30 fotos para subir.";
             } else {
                 boton.disabled = false;
                 boton.style.opacity = "1";
