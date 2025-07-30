@@ -5,6 +5,10 @@
     <title>Cargar fotos de campaña</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            color-scheme: light;
+        }
+    
         body {
             font-family: Arial;
             padding: 0;
@@ -12,7 +16,10 @@
             max-width: 600px;
             margin: auto;
             font-size: 1.1rem;
+            background-color: white;
+            color: black;
         }
+    
         .barra-superior {
             background-color: rgba(106, 13, 173, 1);
             padding: 10px;
@@ -21,12 +28,14 @@
             align-items: center;
             position: relative;
         }
+    
         .barra-superior h1 {
             color: white;
             font-size: 1.3rem;
             margin: 0;
             text-align: center;
         }
+    
         .barra-superior img {
             width: 35px;
             height: 35px;
@@ -34,19 +43,23 @@
             position: absolute;
             right: 10px;
         }
+    
         .contenido {
             padding: 20px;
             text-align: center;
         }
+    
         label {
             display: block;
             margin-top: 20px;
             font-size: 1.1rem;
         }
+    
         input[type="file"] {
             margin-top: 10px;
             font-size: 1rem;
         }
+    
         button {
             margin-top: 30px;
             padding: 15px 40px;
@@ -57,6 +70,7 @@
             border-radius: 10px;
             cursor: pointer;
         }
+    
         #resultado {
             margin-top: 20px;
             font-weight: bold;
@@ -68,7 +82,7 @@
 <body>
 
     <div class="barra-superior">
-        <h1>Cargar fotos de campaña 40</h1>
+        <h1>Cargar fotos de campaña</h1>
         <img src="https://bretpinto.github.io/formulario-fotos/back.png" onclick="history.back()">
     </div>
 
